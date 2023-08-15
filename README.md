@@ -25,7 +25,7 @@ npm i
 cd ./backend
 API_KEY="YOUR_API_KEY" npm start
 ```
-* frontend: 會跑在local port 8080, 開啟網頁說話就可以看到ASR結果
+* frontend: 會跑在local port 3011, 開啟網頁說話就可以看到ASR結果
 ```
 cd ./frontend
 npm run dev
