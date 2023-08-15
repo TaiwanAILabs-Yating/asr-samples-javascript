@@ -28,8 +28,24 @@ export default function App() {
       history.push("")
       setAsrResult(history)
     })
-  
-    await asrSDK.connect()
+
+    const devices = await asrSDK.setupAudioDevices()
+    if(devices.length == 0) {
+      alert("no mic detected!")
+      return
+    }
+    if(devices.length > 1) {
+      const deviceSelectText = devices.map((d, i) => `${i}: ${d.label}`).join("\n")
+      const deviceIndexStr = prompt(`Please select device with number:\n${deviceSelectText}`, 0)
+      const deviceIndex = parseInt(deviceIndexStr)
+      if(!isNaN(deviceIndex)) {
+        await asrSDK.connect(devices[deviceIndex].deviceId)
+      } else {
+        await asrSDK.connect()
+      }
+    } else {
+      await asrSDK.connect()
+    }
   }
 
   useEffect(() => {
