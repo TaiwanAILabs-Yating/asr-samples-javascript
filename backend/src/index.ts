@@ -2,15 +2,28 @@ import Koa from 'koa'
 import Router from 'koa-router'
 import cors from '@koa/cors'
 import axios from 'axios'
+import { bodyParser } from '@koa/bodyparser'
 
 const koa = new Koa()
 const router = new Router()
 
 router.post('/token', async ctx => {
-  const { data } = await axios.post("https://asr.api.yating.tw/v1/token", {
-    // https://developer.yating.tw/doc/asr-%E5%8D%B3%E6%99%82%E8%AA%9E%E9%9F%B3%E8%BD%89%E6%96%87%E5%AD%97#%E8%AA%9E%E8%A8%80%E6%A8%A1%E5%9E%8B%E4%BB%A3%E7%A2%BC
-    pipeline: "asr-zh-en-std",
-  }, {
+  let requestBody: any
+  if (!ctx.request.body || !ctx.request.body.s3CusModelKey) {
+    console.log('not using cus lm')
+    requestBody = {
+      pipeline: "asr-zh-en-std",
+    }
+  } else {
+    console.log(`using cus lm: ${ctx.request.body.s3CusModelKey}`)
+    requestBody = {
+      pipeline: "asr-zh-en-std",
+      "options": {
+        "s3CusModelKey": ctx.request.body.s3CusModelKey
+      }
+    }
+  }
+  const { data } = await axios.post("https://asr.api.yating.tw/v1/token", requestBody, {
     headers: {
       key: process.env.API_KEY
     }
@@ -23,6 +36,7 @@ router.post('/token', async ctx => {
   }
 })
 
+koa.use(bodyParser());
 koa.use(cors({
   origin: "*"
 }))

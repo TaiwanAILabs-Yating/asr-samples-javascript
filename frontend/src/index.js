@@ -6,11 +6,20 @@ const PREACT_APP_BACKEND_HOST = process.env.PREACT_APP_BACKEND_HOST || ""
 
 export default function App() {
   const [asrResult, setAsrResult] = useState([""])
+  const [showCusLm, setShowCusLm] = useState("")
   const asrHistory = useRef([""])
 
   const connect = async() => {
+    const params = new URLSearchParams(window.location.search)
+    const s3CusModelKey = params.get('s3CusModelKey')
+    let requestBody = {}
+    if(s3CusModelKey) {
+      requestBody = { s3CusModelKey }
+      setShowCusLm(`using cus lm: ${s3CusModelKey}`)
+    }
+
     const asrSDK = new AILabsYatingASR(async() => {
-      const { data } = await axios.post(`${PREACT_APP_BACKEND_HOST}/token`)
+      const { data } = await axios.post(`${PREACT_APP_BACKEND_HOST}/token`, requestBody)
       return data.token
     })
 
@@ -58,7 +67,7 @@ export default function App() {
 
   return (
     <div>
-      <h1>ASR SDK Example</h1>
+      <h1>ASR SDK Example {showCusLm}</h1>
       {asrResult.map(r => <p>{r}</p>)}
     </div>
   );

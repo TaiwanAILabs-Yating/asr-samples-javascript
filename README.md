@@ -30,3 +30,8 @@ API_KEY="YOUR_API_KEY" npm start
 cd ./frontend
 npm run dev
 ```
+
+### Custom LM
+* 參考文件[建置Custom LM](https://developer.yating.tw/doc/asr-%E8%AA%9E%E9%9F%B3%E8%BD%89%E6%96%87%E5%AD%97-%E5%AE%A2%E8%A3%BD%E5%8C%96%E6%A8%A1%E5%9E%8B)
+* 將結果內的`path`放入前端網址
+  * ex: http://localhost:3011/?s3CusModelKey=production/e2e//999999.zip
